@@ -1,6 +1,7 @@
-use crate::parser::{Location, Parser};
-use std::{fs, io};
+use std::{fs::File, io::BufReader};
 use utf8_chars::BufReadCharsExt;
+
+use crate::parser::{Location, Parser};
 
 pub struct Number {
     pub start: Location,
@@ -19,8 +20,8 @@ pub struct Input {
 }
 
 pub fn parse(filename: &str) -> Input {
-    let file = fs::File::open(filename).expect("Failed to open input file");
-    let mut reader = io::BufReader::new(file);
+    let file = File::open(filename).expect("Failed to open input file");
+    let mut reader = BufReader::new(file);
     let iter = reader.chars().map(|c| c.unwrap());
 
     let mut parser = Parser::new(iter);

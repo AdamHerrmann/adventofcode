@@ -1,17 +1,17 @@
 use std::fs::File;
-use std::io;
 use std::io::prelude::*;
+use std::io::{BufReader, Result};
 
 const RADIX: u32 = 10;
 
-fn main() -> io::Result<()> {
+fn main() -> Result<()> {
     println!("Part 1: {}", part_one().unwrap());
     println!("Part 2: {}", part_two().unwrap());
     Ok(())
 }
 
-fn part_one() -> Result<u32, io::Error> {
-    let reader = io::BufReader::new(File::open("input.txt")?);
+fn part_one() -> Result<u32> {
+    let reader = BufReader::new(File::open("input.txt")?);
     let mut sum = 0;
 
     for line in reader.lines() {
@@ -27,8 +27,8 @@ fn part_one() -> Result<u32, io::Error> {
     Ok(sum)
 }
 
-fn part_two() -> Result<u32, io::Error> {
-    let reader = io::BufReader::new(File::open("input.txt")?);
+fn part_two() -> Result<u32> {
+    let reader = BufReader::new(File::open("input.txt")?);
     let mut sum = 0;
 
     for line in reader.lines() {

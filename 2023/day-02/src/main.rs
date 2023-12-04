@@ -1,5 +1,7 @@
-use std::io::prelude::*;
-use std::{fs, io};
+use std::{
+    fs::File,
+    io::{prelude::*, BufReader},
+};
 
 use draw::Draw;
 use game::Game;
@@ -8,8 +10,8 @@ mod draw;
 mod game;
 
 fn main() {
-    let file = fs::File::open("input.txt").expect("Failed to open input file");
-    let games = io::BufReader::new(file)
+    let file = File::open("input.txt").expect("Failed to open input file");
+    let games = BufReader::new(file)
         .lines()
         .map(|line| Game::parse(line.unwrap().as_str()))
         .collect();
