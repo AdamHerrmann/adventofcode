@@ -1,4 +1,5 @@
 use num::integer::gcd;
+use std::cmp;
 use std::collections::HashMap;
 use std::io::prelude::*;
 use std::{fs::File, io::BufReader};
@@ -8,7 +9,11 @@ use anyhow::Result;
 // const INPUT_FILE: &str = "./example.txt";
 const INPUT_FILE: &str = "./input.txt";
 
-type Input = Vec<Vec<char>>;
+struct Input {
+    height: usize,
+    width: usize,
+    antennas: HashMap<char, Vec<(isize, isize)>>,
+}
 
 fn main() -> Result<()> {
     let input = parse_input()?;
@@ -24,23 +29,16 @@ fn main() -> Result<()> {
 fn parse_input() -> Result<Input> {
     let reader = BufReader::new(File::open(INPUT_FILE)?);
 
-    Ok(reader
-        .lines()
-        .map(|l| l.unwrap().chars().collect::<Vec<char>>())
-        .collect::<Input>())
-}
+    let mut height = 0;
+    let mut width = 0;
+    let mut antennas = HashMap::<char, Vec<(isize, isize)>>::new();
 
-fn two_d_iter(height: usize, width: usize) -> impl Iterator<Item = (usize, usize)> {
-    (0..height).flat_map(move |y| (0..width).map(move |x| (x, y)))
-}
+    for (x, lines) in reader.lines().map(|l| l.unwrap()).enumerate() {
+        height += 1;
 
-fn part_one(input: &Input) -> usize {
-    let height = input.len();
-    let width = input[0].len();
-    let antennas = {
-        let mut antennas = HashMap::<char, Vec<(isize, isize)>>::new();
-        for (x, y) in two_d_iter(height, width) {
-            match input[y][x] {
+        for (y, c) in lines.chars().enumerate() {
+            width = cmp::max(width, y + 1); // :(
+            match c {
                 '.' => {}
                 frequency => {
                     antennas
@@ -50,9 +48,19 @@ fn part_one(input: &Input) -> usize {
                 }
             }
         }
-        antennas
-    };
+    }
 
+    Ok(Input {
+        height,
+        width,
+        antennas,
+    })
+}
+
+fn part_one(input: &Input) -> usize {
+    let height = input.height;
+    let width = input.width;
+    let antennas = &input.antennas;
     let mut antinodes = vec![vec![false; width]; height];
 
     for positions in antennas.values() {
@@ -80,24 +88,9 @@ fn part_one(input: &Input) -> usize {
 }
 
 fn part_two(input: &Input) -> usize {
-    let height = input.len();
-    let width = input[0].len();
-    let antennas = {
-        let mut antennas = HashMap::<char, Vec<(isize, isize)>>::new();
-        for (x, y) in two_d_iter(height, width) {
-            match input[y][x] {
-                '.' => {}
-                frequency => {
-                    antennas
-                        .entry(frequency)
-                        .or_insert(Vec::new())
-                        .push((x as isize, y as isize));
-                }
-            }
-        }
-        antennas
-    };
-
+    let height = input.height;
+    let width = input.width;
+    let antennas = &input.antennas;
     let mut antinodes = vec![vec![false; width]; height];
 
     for positions in antennas.values() {
