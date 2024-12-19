@@ -1,5 +1,4 @@
 use std::io::prelude::*;
-use std::num;
 use std::{fs::File, io::BufReader};
 
 use anyhow::Result;

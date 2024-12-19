@@ -1,4 +1,3 @@
-use std::cmp;
 use std::io::prelude::*;
 use std::ops::Range;
 use std::{fs::File, io::BufReader};
