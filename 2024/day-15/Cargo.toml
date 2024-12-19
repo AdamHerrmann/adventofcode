@@ -5,3 +5,11 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.94"
+
+[[bin]]
+name = "part_one"
+path = "src/part_one.rs"
+
+[[bin]]
+name = "part_two"
+path = "src/part_two.rs"
